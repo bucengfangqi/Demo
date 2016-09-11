@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+	"http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+	<!-- 这样配置后，当配置文件修改保存时就会及时更新到服务器中 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 指定WEB应用的编码集，相当于调用HttpServletRequest.setCharacterEncodint方法，如果使用了velocity或freemarker,它也用于指定输出的编码格式 -->
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+	<!-- 指定请求后缀为.action，指定多个请求后缀用逗号分隔 -->
+	<constant name="struts.action.extension" value="action" />
+	<!--设置浏览器是否缓存静态内容，建议：开发阶段关闭，运行时开启 -->
+	<constant name="struts.serve.static.browserCache" value="false" />
+	<!--当struts.xml配置文件修改后，系统是否重新加载该文件，开发阶段打开此功能 -->
+	<constant name="struts.configuration.xml.reload" value="true" />
+	<!-- 开发提示：出错时打印更详细的信息 -->
+	<constant name="struts.devMode" value="true" />
+	<!-- 指定请求的后缀可以是.do或.action -->
+	<constant name="struts.action.extension" value="do,action" />
+	<package name="mypackage" extends="struts-default" namespace="/">
+		<interceptors>
+			<interceptor name="auto" class="com.java.interceptor.AuthInterceptor"></interceptor>
+			<interceptor-stack name="autoStack">
+				<interceptor-ref name="defaultStack"></interceptor-ref>
+				<interceptor-ref name="auto"></interceptor-ref>
+			</interceptor-stack>
+		</interceptors>
+
+		<!-- 错误action跳转到用同一个页面 -->
+		<default-action-ref name="error"></default-action-ref>
+		<action name="error">
+			<result>/login.jsp</result>
+		</action>
+		<!-- 登录action 对应judge方法 -->
+		<action name="test" class="com.java.action.User" method="judge">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success" type="chain">
+				<param name="actionName">testAll</param>
+			</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<!-- 清除action对应clean方法 -->
+		<action name="clean" class="com.java.action.User" method="clean">
+			<result name="success">/login.jsp</result>
+		</action>
+		<!-- 注册action对应regist方法 -->
+		<action name="regist" class="com.java.action.User" method="regist">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+			<result name="success">/login.jsp</result>
+			<result name="none">/regist.jsp</result>
+		</action>
+		
+		<action name="testAll">
+			<!-- 如果不添加拦截器，那么会输入test1.action可直接进入主页面，但是现在添加了拦截器，想要访问数据库就必须输入账号密码 ，如果输入过账号以及密码了，那么访问test1.action可直接进入主页 
+				另外注意test1 action不要加类还有方法，要不然跟test.action是一样的效果，还要输入密码 -->
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/success.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test1">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page1.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test2">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page2.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test3">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page3.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test4">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page4.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test5">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page5.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+		<action name="test6">
+			<interceptor-ref name="autoStack"></interceptor-ref>
+			<result name="success">/WEB-INF/page6.jsp</result>
+			<result name="none">/login.jsp</result>
+		</action>
+	</package>
+</struts>
